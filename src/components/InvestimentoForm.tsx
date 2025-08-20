@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { createInvestimento, type Investimento } from "../routes/investimentos";
+// Importe o objeto e o tipo do nosso novo arquivo
+import { TiposDeInvestimento, type TipoInvestimento } from "../types/types";
 
 interface Props {
     onSuccess?: () => void;
@@ -10,12 +12,13 @@ type NovoInvestimentoData = Omit<Investimento, "id" | "data_investmento">;
 
 export const InvestimentoForm = ({ onSuccess }: Props) => {
     const [nome, setNome] = useState("");
-    const [tipo, setTipo] = useState("");
+    // O estado agora pode usar o tipo para mais segurança
+    const [tipo, setTipo] = useState<TipoInvestimento | "">("");
     const [valor, setValor] = useState<number | "">("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!nome.trim() || !tipo.trim() || valor === "") {
+        if (!nome.trim() || !tipo || valor === "") {
             toast.error("Preencha todos os campos.");
             return;
         }
@@ -49,15 +52,26 @@ export const InvestimentoForm = ({ onSuccess }: Props) => {
                            transition-colors duration-200
                            focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
-            <input
-                type="text"
-                placeholder="Tipo (ex: Renda Fixa)"
+
+            <select
                 value={tipo}
-                onChange={(e) => setTipo(e.target.value)}
+                // O evento onChange precisa de uma conversão de tipo
+                onChange={(e) => setTipo(e.target.value as TipoInvestimento)}
                 className="w-full px-4 py-3 bg-background border-2 border-slate-200 rounded-lg text-text-primary placeholder-text-secondary
                            transition-colors duration-200
                            focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-            />
+            >
+                <option value="" disabled>
+                    Selecione o tipo
+                </option>
+                {/* Usamos Object.values() para iterar sobre os valores do nosso objeto */}
+                {Object.values(TiposDeInvestimento).map((tipoOption) => (
+                    <option key={tipoOption} value={tipoOption}>
+                        {tipoOption}
+                    </option>
+                ))}
+            </select>
+
             <input
                 type="number"
                 placeholder="Valor investido"

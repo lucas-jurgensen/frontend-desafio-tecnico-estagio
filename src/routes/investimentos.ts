@@ -1,7 +1,9 @@
+import type { TipoInvestimento as TipoInvestimentoEnum } from "../types/types";
+
 export interface Investimento {
     id?: number;
     nome_investimento: string;
-    tipo_investimento: string;
+    tipo_investimento: TipoInvestimentoEnum;
     valor: number;
     data_investimento?: string;
 }

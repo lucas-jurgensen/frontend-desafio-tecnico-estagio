@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { deleteInvestimento, type Investimento, updateInvestimento } from "../routes/investimentos";
 import { ConfirmModal } from "./ConfirmModal";
+import { TiposDeInvestimento, type TipoInvestimento } from "../types/types";
 
 interface Props {
     investimentos: Investimento[];
@@ -11,7 +12,7 @@ interface Props {
 export const InvestimentosListar = ({ investimentos, onUpdate }: Props) => {
     const [editId, setEditId] = useState<number | null>(null);
     const [editNome, setEditNome] = useState("");
-    const [editTipo, setEditTipo] = useState("");
+    const [editTipo, setEditTipo] = useState<TipoInvestimento | "">("");
     const [editValor, setEditValor] = useState<number | "">("");
     const [itemParaDeletar, setItemParaDeletar] = useState<Investimento | null>(null);
 
@@ -34,7 +35,7 @@ export const InvestimentosListar = ({ investimentos, onUpdate }: Props) => {
     };
 
     const handleUpdate = async () => {
-        if (!editId) return;
+        if (!editId || !editTipo) return;
         const result = await updateInvestimento(editId, {
             nome_investimento: editNome,
             tipo_investimento: editTipo,
@@ -79,7 +80,15 @@ export const InvestimentosListar = ({ investimentos, onUpdate }: Props) => {
                             <div className="p-4 bg-blue-50 rounded-lg border-2 border-primary">
                                 <div className="grid grid-cols-12 gap-3 items-center">
                                     <input value={editNome} onChange={(e) => setEditNome(e.target.value)} className={`${inputEditClasses} col-span-5`} />
-                                    <input value={editTipo} onChange={(e) => setEditTipo(e.target.value)} className={`${inputEditClasses} col-span-3`} />
+
+                                    <select value={editTipo} onChange={(e) => setEditTipo(e.target.value as TipoInvestimento)} className={`${inputEditClasses} col-span-3`}>
+                                        {Object.values(TiposDeInvestimento).map((tipoOption) => (
+                                            <option key={tipoOption} value={tipoOption}>
+                                                {tipoOption}
+                                            </option>
+                                        ))}
+                                    </select>
+
                                     <input
                                         type="number"
                                         value={editValor}
