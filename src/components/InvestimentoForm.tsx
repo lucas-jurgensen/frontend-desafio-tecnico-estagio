@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { createInvestimento, type Investimento } from "../routes/investimentos";
-// Importe o objeto e o tipo do nosso novo arquivo
 import { TiposDeInvestimento, type TipoInvestimento } from "../types/types";
 
 interface Props {
@@ -12,7 +11,6 @@ type NovoInvestimentoData = Omit<Investimento, "id" | "data_investmento">;
 
 export const InvestimentoForm = ({ onSuccess }: Props) => {
     const [nome, setNome] = useState("");
-    // O estado agora pode usar o tipo para mais segurança
     const [tipo, setTipo] = useState<TipoInvestimento | "">("");
     const [valor, setValor] = useState<number | "">("");
 
